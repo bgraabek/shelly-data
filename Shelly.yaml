@@ -1,0 +1,195 @@
+name: Shelly
+timeSelector: {}
+sharedTimeInterval:
+  enabled: false
+  isLive: false
+  start: 1d
+widgets:
+  4a943771-0f24-46dd-b353-8e3641451d8e:
+    x: 0
+    y: 10
+    height: 3
+    queryString: |-
+      #type="json-for-action"
+      | tail(1)
+      | table("data.device_status._updated")
+    visualization: single-value
+    end: now
+    start: 1d
+    width: 6
+    title: Data last updated
+    isLive: false
+    type: query
+  ef490a39-0472-46e7-9814-d59381b30d39:
+    x: 6
+    y: 4
+    height: 4
+    queryString: |-
+      #type="json-for-action"
+      | timechart(function=max("data.device_status.tmp.tC"))
+    end: now
+    start: 1d
+    width: 6
+    options:
+      legendTitle: degrees celsius
+      withXAxisTitle: false
+      colorPalette: monoBlue
+      labelAlign: center
+      includeHistogram: false
+      reversePalette: false
+    visualization: heat-map
+    title: Temperature Heatmap
+    isLive: false
+    type: query
+  d620510c-511a-4696-9ff4-5292a6524192:
+    x: 0
+    y: 13
+    height: 5
+    queryString: |-
+      tail(1) |
+      latf:=54.6046134 | lonf:=11.9519387 |
+      worldMap(lat=latf, lon=lonf)
+    end: now
+    start: 1d
+    width: 12
+    options:
+      magnitudeMode: none
+      fixedSize: 10
+      zLevel: 32.3
+      projection: orthographic
+      clon: 10
+      fixedOpacity: 81
+      clat: 55
+    visualization: world-map
+    title: Location
+    isLive: false
+    type: query
+  fc1e9fc1-2b35-4154-86a1-60130283fe8c:
+    x: 6
+    y: 8
+    height: 2
+    queryString: |-
+      #type="json-for-action" |
+      stats(function=[min("data.device_status.tmp.tC"), max("data.device_status.tmp.tC")]) |
+      rename("_min",as="Minimum temperature") |
+      rename("_max",as="Maximum temperature")
+    visualization: table-view
+    end: now
+    start: 1d
+    width: 6
+    title: Min and Max temperature
+    isLive: false
+    type: query
+  3302b09d-6d7c-44d6-a57f-717175f6eeba:
+    x: 0
+    y: 4
+    height: 4
+    queryString: |-
+      #type="json-for-action"
+      | timechart(function=max("data.device_status.tmp.tC"))
+    end: now
+    start: 1d
+    width: 6
+    options:
+      series: {}
+      legend: false
+      showDataPoints: false
+      connect-points: true
+      yAxisScale: linear
+      plotType: area
+      show-utc: false
+      imputation: lerp
+      yAxisTitle: degrees (celsius)
+      stacking: none
+    visualization: time-chart
+    title: Temperature Timechart
+    isLive: false
+    type: query
+  d79328ad-47da-4448-aed9-b10efa506219:
+    x: 0
+    y: 0
+    height: 4
+    queryString: |-
+      #type="json-for-action"
+      | timechart(function=max("data.device_status.tmp.tC"))
+    end: now
+    start: 1d
+    width: 6
+    options:
+      trend-value: abs
+      ct:
+      - bg: inherit
+        txt: var(--single-value-trend-negative-text-color)
+        v: 30
+      - bg: inherit
+        txt: var(--single-value-warning-text-color)
+        v: 20
+      - bg: inherit
+        txt: var(--single-value-trend-positive-text-color)
+        v: 7
+      - bg: inherit
+        txt: var(--single-value-warning-text-color)
+        v: 5
+      decimal-places: 1
+      color-method: threshold
+      sparkline-zero: true
+      use-colorised-thresholds: true
+      value-format: metric
+      default:
+        bg: inherit
+        txt: var(--single-value-trend-negative-text-color)
+    visualization: single-value
+    title: Temperature
+    isLive: false
+    type: query
+  6e6f7657-4bd9-49bb-a50b-0f31feec60c3:
+    x: 0
+    y: 8
+    height: 2
+    queryString: |-
+      #type="json-for-action"
+      | range("data.device_status.tmp.tC")
+    end: now
+    start: 1d
+    width: 6
+    options:
+      decimal-places: 1
+      default: {}
+    visualization: single-value
+    title: Temperature range
+    isLive: false
+    type: query
+  e74ee3cc-7d1b-4954-ab82-dccc50363252:
+    x: 6
+    y: 0
+    height: 4
+    queryString: |-
+      #type="json-for-action"
+      | timechart(function=max("data.device_status.hum.value"))
+    end: now
+    start: 1d
+    width: 6
+    options:
+      default: {}
+    visualization: single-value
+    title: Humidity
+    isLive: false
+    type: query
+  9e344004-b9b4-45d0-a2ab-3b7e07abac71:
+    x: 6
+    y: 10
+    height: 3
+    queryString: |-
+      #type="json-for-action"
+      | timechart(function=max("data.device_status.bat.value"))
+    end: now
+    start: 1d
+    width: 6
+    options:
+      connect-points: false
+      imputation: none
+    visualization: time-chart
+    title: Battery value in %
+    isLive: false
+    type: query
+$schema: https://schemas.humio.com/dashboard/v0.17.0
